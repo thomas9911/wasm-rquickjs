@@ -144,12 +144,7 @@ fn add_wit_dependencies(context: &&GeneratorContext, doc: &mut DocumentMut) -> a
 /// Copies all source files from the skeleton directory to `<output>/src`.
 pub fn copy_skeleton_sources(output: &Utf8Path) -> anyhow::Result<()> {
     if let Some(src) = SKELETON.get_dir("src") {
-        for file in src.files() {
-            let src_path = Utf8Path::from_path(file.path())
-                .ok_or_else(|| anyhow!("Unexpected non-UTF-8 path in skeleton"))?;
-            let dest_path = output.join(src_path);
-            std::fs::write(dest_path, file.contents())?;
-        }
+        copy_files_in_dir(src, output)?;
 
         std::fs::create_dir_all(output.join("src/builtin"))?;
         for file in src
@@ -163,5 +158,26 @@ pub fn copy_skeleton_sources(output: &Utf8Path) -> anyhow::Result<()> {
             std::fs::write(dest_path, file.contents())?;
         }
     }
+    Ok(())
+}
+
+pub fn copy_cargo_config(output: &Utf8Path) -> anyhow::Result<()> {
+    if let Some(src) = SKELETON.get_dir(".cargo") {
+        // use create_dir_all so that if the directory already exists, it doesn't fail
+        std::fs::create_dir_all(output.join(".cargo"))?;
+        copy_files_in_dir(src, output)?;
+    }
+    Ok(())
+}
+
+
+fn copy_files_in_dir(src: &Dir<'_>, output: &Utf8Path) -> anyhow::Result<()> {
+    for file in src.files() {
+        let src_path = Utf8Path::from_path(file.path())
+            .ok_or_else(|| anyhow!("Unexpected non-UTF-8 path in skeleton"))?;
+        let dest_path = output.join(src_path);
+        std::fs::write(dest_path, file.contents())?;
+    }
+
     Ok(())
 }

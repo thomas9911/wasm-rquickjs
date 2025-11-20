@@ -1,7 +1,9 @@
 use crate::conversions::generate_conversions;
 use crate::exports::generate_export_impls;
 use crate::imports::generate_import_modules;
-use crate::skeleton::{copy_skeleton_sources, generate_app_manifest, generate_cargo_toml};
+use crate::skeleton::{
+    copy_cargo_config, copy_skeleton_sources, generate_app_manifest, generate_cargo_toml,
+};
 use crate::wit::add_get_script_import;
 use anyhow::{Context, anyhow};
 use camino::{Utf8Path, Utf8PathBuf};
@@ -83,6 +85,9 @@ pub fn generate_wrapper_crate(
 
     // Copying the skeleton files
     copy_skeleton_sources(context.output).context("Failed to copy skeleton sources")?;
+
+    // Copying the cargo config file, if it exists in the skeleton
+    copy_cargo_config(context.output).context("Failed to copy cargo config")?;
 
     // Copying the WIT package to the output directory
     copy_wit_directory(wit, &context.output.join("wit"))
