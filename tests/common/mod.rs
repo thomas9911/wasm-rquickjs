@@ -288,6 +288,7 @@ impl CompiledTest {
             }],
             &wrapper_crate_root,
             None,
+            false
         )?;
 
         println!("Compiling wrapper crate in {wrapper_crate_root}");

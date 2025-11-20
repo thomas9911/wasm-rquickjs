@@ -67,6 +67,7 @@ pub fn generate_wrapper_crate(
     js_modules: &[JsModuleSpec],
     output: &Utf8Path,
     world: Option<&str>,
+    include_cargo_config: bool,
 ) -> anyhow::Result<()> {
     // Making sure the target directories exists
     std::fs::create_dir_all(output).context("Failed to create output directory")?;
@@ -86,8 +87,10 @@ pub fn generate_wrapper_crate(
     // Copying the skeleton files
     copy_skeleton_sources(context.output).context("Failed to copy skeleton sources")?;
 
-    // Copying the cargo config file, if it exists in the skeleton
-    copy_cargo_config(context.output).context("Failed to copy cargo config")?;
+    if include_cargo_config {
+        // Copying the cargo config file, if it exists in the skeleton
+        copy_cargo_config(context.output).context("Failed to copy cargo config")?;
+    }
 
     // Copying the WIT package to the output directory
     copy_wit_directory(wit, &context.output.join("wit"))

@@ -13,6 +13,7 @@ fn main() {
             wit,
             output,
             world,
+            include_cargo_config,
         } => {
             let modules = if let Some(js) = maybe_js {
                 vec![JsModuleSpec {
@@ -23,7 +24,7 @@ fn main() {
                 js_modules.iter().cloned().map(JsModuleSpec::from).collect()
             };
 
-            if let Err(err) = generate_wrapper_crate(wit, &modules, output, world.as_deref()) {
+            if let Err(err) = generate_wrapper_crate(wit, &modules, output, world.as_deref(), *include_cargo_config) {
                 eprintln!("Error generating wrapper crate: {err:#}");
                 std::process::exit(1);
             }

@@ -33,6 +33,10 @@ pub enum Command {
         #[arg(long)]
         output: Utf8PathBuf,
 
+        /// Whether to include the .cargo/config.toml file in the output directory
+        #[arg(long, default_value = "false")]
+        include_cargo_config: bool,
+
         /// The WIT world to use
         #[arg(long)]
         world: Option<String>,
