@@ -170,7 +170,6 @@ pub fn copy_cargo_config(output: &Utf8Path) -> anyhow::Result<()> {
     Ok(())
 }
 
-
 fn copy_files_in_dir(src: &Dir<'_>, output: &Utf8Path) -> anyhow::Result<()> {
     for file in src.files() {
         let src_path = Utf8Path::from_path(file.path())
